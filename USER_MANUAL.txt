@@ -1,0 +1,191 @@
+YOUTUBE VIDEO DOWNLOADER - USER MANUAL
+=====================================
+
+OVERVIEW
+--------
+This toolkit provides two main scripts for downloading and managing YouTube videos:
+- pydtyt.py - Downloads videos from YouTube URLs
+- videos_enricher.py - Extracts video metadata without downloading
+
+PREREQUISITES
+-------------
+
+Installation:
+1. Install Python 3.7 or higher
+2. Install required packages:
+   pip install -r requirements.txt
+
+Required Files:
+- videos.txt - Contains YouTube URLs (one per line)
+- downloads/ folder - Will be created automatically for downloaded videos
+
+SCRIPT 1: pydtyt.py (Video Downloader)
+======================================
+
+Purpose:
+Downloads YouTube videos in best available quality from URLs listed in videos.txt
+
+How to Use:
+
+1. Prepare URLs
+   - Open videos.txt in any text editor
+   - Add YouTube URLs, one per line:
+     https://www.youtube.com/watch?v=dQw4w9WgXcQ
+     https://www.youtube.com/watch?v=oHg5SJYRHA0
+
+2. Run the Script
+   python pydtyt.py
+
+3. What Happens
+   - Script reads all URLs from videos.txt
+   - Removes duplicate URLs automatically
+   - Creates backup if duplicates found
+   - Downloads videos to downloads/ folder
+   - Videos saved as: downloads/[Video Title].[ext]
+
+Features:
+- Duplicate Detection: Automatically removes duplicate URLs
+- Backup Creation: Creates timestamped backup before cleaning duplicates
+- Best Quality: Downloads highest quality available
+- Progress Display: Shows download progress for each video
+
+Output:
+- Downloaded videos in downloads/ folder
+- Backup file (if duplicates found): videos_backup_YYYYMMDD_HHMMSS.txt
+
+SCRIPT 2: videos_enricher.py (Metadata Extractor)
+=================================================
+
+Purpose:
+Extracts detailed information about YouTube videos without downloading them
+
+How to Use:
+
+1. Prepare URLs
+   - Add YouTube URLs to videos.txt (same as above)
+
+2. Run the Script
+   python videos_enricher.py
+
+3. What Happens
+   - Extracts metadata for each URL
+   - Creates detailed report with video information
+   - Clears videos.txt after processing
+
+Extracted Information:
+- Title: Video title
+- Upload Date: When video was uploaded (formatted as "YYYY Mon DD")
+- Views: View count with comma formatting
+- Duration: Video length in "X min Y sec" format
+- URL: Original YouTube URL
+
+Output File:
+- Filename: BBall-YYYY-MM-DD-HH-MM-SS.txt
+- Content: Formatted report with all video details
+
+Sample Output:
+Enriched YouTube Videos Data
+==================================================
+
+URL: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+Title: Rick Astley - Never Gonna Give You Up
+Upload Date: 2009 Oct 25
+Views: 1,234,567,890
+Duration: 3 min 33 sec
+------------------------------
+
+WORKFLOW EXAMPLES
+=================
+
+Example 1: Download Videos
+1. Add URLs to videos.txt:
+   https://www.youtube.com/watch?v=VIDEO1
+   https://www.youtube.com/watch?v=VIDEO2
+2. Run: python pydtyt.py
+3. Check downloads/ folder for videos
+
+Example 2: Get Video Information
+1. Add URLs to videos.txt
+2. Run: python videos_enricher.py
+3. Check generated BBall-*.txt file for details
+4. videos.txt will be cleared automatically
+
+Example 3: Combined Workflow
+1. Add URLs to videos.txt
+2. Run python videos_enricher.py to get video info
+3. Review the generated report
+4. Add URLs back to videos.txt for videos you want to download
+5. Run python pydtyt.py to download selected videos
+
+FILE MANAGEMENT
+===============
+
+Input Files:
+- videos.txt - Your URL list (manually maintained)
+
+Output Files:
+- downloads/ - Downloaded video files
+- BBall-*.txt - Video metadata reports (timestamped)
+- videos_backup_*.txt - Backup files (when duplicates removed)
+
+Cleanup:
+- Delete old BBall-*.txt files periodically
+- Delete backup files after confirming downloads
+- Clear downloads/ folder when needed
+
+TROUBLESHOOTING
+===============
+
+Common Issues:
+
+1. "videos.txt not found"
+   - Create videos.txt file in the same directory
+   - Add at least one YouTube URL
+
+2. Download fails
+   - Check internet connection
+   - Verify URL is valid and accessible
+   - Some videos may be region-restricted
+
+3. Permission errors
+   - Ensure write permissions in script directory
+   - Run as administrator if needed
+
+4. Quality issues
+   - Script downloads best available quality
+   - Some videos may only have lower quality versions
+
+Error Handling:
+- Invalid URLs are skipped with error messages
+- Failed downloads don't stop the entire process
+- Metadata extraction continues even if some URLs fail
+
+TIPS
+====
+
+1. Batch Processing: Add multiple URLs to process many videos at once
+2. Quality Check: Use videos_enricher.py first to review videos before downloading
+3. Storage Management: Monitor downloads/ folder size
+4. URL Validation: Ensure URLs are complete and properly formatted
+5. Backup Strategy: Keep important videos.txt versions backed up
+
+ADVANCED USAGE
+==============
+
+Custom Download Location:
+Edit pydtyt.py line 32:
+'outtmpl': 'your_custom_path/%(title)s.%(ext)s',
+
+Different Video Quality:
+Edit pydtyt.py line 31:
+'format': 'worst',  # for lowest quality
+'format': 'best[height<=720]',  # for max 720p
+
+SUPPORT
+=======
+
+For issues or questions:
+1. Check this manual first
+2. Verify all prerequisites are installed
+3. Test with a single, known-working YouTube URL
+4. Check console output for specific error messages

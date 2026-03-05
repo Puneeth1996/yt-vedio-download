@@ -2,6 +2,7 @@ from yt_dlp import YoutubeDL
 from pathlib import Path
 from datetime import datetime
 import shutil
+import time
 
 videos_file = Path("videos.txt")
 if not videos_file.exists():
@@ -33,26 +34,31 @@ else:
 
 # Download using yt_dlp
 ydl_opts = {
-    'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+    'format': 'worst[ext=mp4]/worst',
     'outtmpl': 'downloads/%(title)s.%(ext)s',
     'noplaylist': True,
-    'extractor_retries': 5,
-    'retries': 10,
-    'sleep_interval': 2,
-    'max_sleep_interval': 10,
+    'extractor_retries': 3,
+    'retries': 5,
+    'sleep_interval': 10,
+    'max_sleep_interval': 60,
     'http_headers': {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'en-us,en;q=0.5',
-        'Sec-Fetch-Mode': 'navigate'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0'
     },
-    'cookiefile': None,
+    'ignoreerrors': True,
     'no_warnings': False,
-    'merge_output_format': 'mp4'
+    'fragment_retries': 3,
+    'skip_unavailable_fragments': True
 }
 
 with YoutubeDL(ydl_opts) as ydl:
     if unique:
-        ydl.download(unique)
+        for url in unique:
+            try:
+                print(f"Downloading: {url}")
+                ydl.download([url])
+                print(f"Successfully downloaded: {url}")
+            except Exception as e:
+                print(f"Failed to download {url}: {str(e)}")
+                continue
     else:
         print("No URLs to download.")
